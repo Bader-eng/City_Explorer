@@ -19,13 +19,13 @@ server.get('/data',(req,res)=>{
   res.status(200).send('Hi from the data page, I am the server !!!');
 });
 
-server.get('/location',(req,res)=>{
+server.get('location',(req,res)=>{
   let locationData=require('./data/location.json');
   let locationRes= new Location(locationData);
   res.send(locationRes);
 });
 let weather =[];
-server.get('/weather',(req,res)=>{
+server.get('weather',(req,res)=>{
   let weatherData=require('./data/weather.json').data;
   weatherData.forEach(item =>{
     let weatherRes= new Weather (item);
