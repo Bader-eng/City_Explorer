@@ -1,8 +1,8 @@
 'use strict';
 const express = require('express');
-// require('dotenv').config();
+require('dotenv').config();
 
-// const cors = require('cors');
+const cors = require('cors');
 
 const server=express();
 
@@ -12,7 +12,7 @@ server.listen(PORT,()=>{
   console.log(`listening on port ${PORT}`);
 });
 
-// server.use(cors());
+server.use(cors());
 
 server.get('/data',(req,res)=>{
   res.status(200).send('Hi from the data page, I am the server !!!');
