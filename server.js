@@ -49,6 +49,8 @@ function Location(locData){
   this.longitude=locData[0].lon;
 }
 
+
+
 server.get('/*',(req,res)=>{
   let errObj = {
     status: 500,
