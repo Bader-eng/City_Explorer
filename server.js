@@ -18,7 +18,11 @@ server.get('/data',(req,res)=>{
   res.status(200).send('Hi from the data page, I am the server !!!');
 });
 
-server.get('location',(req,res)=>{
+server.get('/',(req,res)=>{
+  res.send('Hi this in my page!');
+});
+
+server.get('/location',(req,res)=>{
   let locationData=require('./data/location.json');
   //console.log(locationData);
   let locationRes= new Location(locationData);
@@ -26,7 +30,7 @@ server.get('location',(req,res)=>{
 });
 
 let weather =[];
-server.get('weather',(req,res)=>{
+server.get('/weather',(req,res)=>{
   let weatherData=require('./data/weather.json').data;
   weatherData.forEach(item =>{
     let weatherRes= new Weather (item);
@@ -39,7 +43,8 @@ server.get('weather',(req,res)=>{
 
 function Weather(local){
   this.forecast=local.weather.description;
-  this.time=local.datetime;
+  this.time= new Date(local.datetime).toString().slice(0,15);
+
 }
 
 function Location(locData){
@@ -56,3 +61,4 @@ server.get('/*',(req,res)=>{
   };
   res.status(404).send(errObj);
 });
+//http://localhost:5000/weather
