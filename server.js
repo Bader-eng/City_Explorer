@@ -46,6 +46,7 @@ function Weather(local){
   this.time= new Date(local.datetime).toString().slice(0,15);
 
 }
+//done
 
 function Location(locData){
   this.search_query='Lynnwood';
