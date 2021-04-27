@@ -2,10 +2,6 @@
 const express = require('express');
 require('dotenv').config();
 
-<<<<<<< HEAD
-=======
-//http://localhost:3000
->>>>>>> ae1bc3b565102d990c90f4ebb020f2cd00e2b722
 const cors = require('cors');
 
 const server=express();
@@ -22,13 +18,15 @@ server.get('/data',(req,res)=>{
   res.status(200).send('Hi from the data page, I am the server !!!');
 });
 
-server.get('location',(req,res)=>{
+server.get('/location',(req,res)=>{
   let locationData=require('./data/location.json');
+  //console.log(locationData);
   let locationRes= new Location(locationData);
   res.send(locationRes);
 });
+
 let weather =[];
-server.get('weather',(req,res)=>{
+server.get('/weather',(req,res)=>{
   let weatherData=require('./data/weather.json').data;
   weatherData.forEach(item =>{
     let weatherRes= new Weather (item);
@@ -51,11 +49,10 @@ function Location(locData){
   this.longitude=locData[0].lon;
 }
 
-server.get('*',(req,res)=>{
+server.get('/*',(req,res)=>{
   let errObj = {
     status: 500,
     resText: 'sorry! this page not found'
   };
   res.status(404).send(errObj);
 });
-//commit///
