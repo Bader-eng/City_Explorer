@@ -18,6 +18,10 @@ server.get('/data',(req,res)=>{
   res.status(200).send('Hi from the data page, I am the server !!!');
 });
 
+server.get('/',(req,res)=>{
+  res.send('Hi this in my page!');
+});
+
 server.get('/location',(req,res)=>{
   let locationData=require('./data/location.json');
   //console.log(locationData);
@@ -39,8 +43,10 @@ server.get('/weather',(req,res)=>{
 
 function Weather(local){
   this.forecast=local.weather.description;
-  this.time=local.datetime;
+  this.time= new Date(local.datetime).toString().slice(0,15);
+
 }
+//done
 
 function Location(locData){
   this.search_query='Lynnwood';
@@ -56,3 +62,4 @@ server.get('/*',(req,res)=>{
   };
   res.status(404).send(errObj);
 });
+//http://localhost:5000/weather
