@@ -2,7 +2,6 @@
 const express = require('express');
 require('dotenv').config();
 
-//http://localhost:3000
 const cors = require('cors');
 
 const server=express();
@@ -21,9 +20,11 @@ server.get('/data',(req,res)=>{
 
 server.get('location',(req,res)=>{
   let locationData=require('./data/location.json');
+  //console.log(locationData);
   let locationRes= new Location(locationData);
   res.send(locationRes);
 });
+
 let weather =[];
 server.get('weather',(req,res)=>{
   let weatherData=require('./data/weather.json').data;
@@ -48,7 +49,7 @@ function Location(locData){
   this.longitude=locData[0].lon;
 }
 
-server.get('*',(req,res)=>{
+server.get('/*',(req,res)=>{
   let errObj = {
     status: 500,
     resText: 'sorry! this page not found'
