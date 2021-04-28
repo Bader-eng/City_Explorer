@@ -62,4 +62,3 @@ server.get('/*',(req,res)=>{
   };
   res.status(404).send(errObj);
 });
-//http://localhost:5000/weather
