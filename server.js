@@ -4,11 +4,8 @@ require('dotenv').config();
 const cors = require('cors');
 const superagent = require('superagent');
 
-
 const server=express();
 const PORT=process.env.PORT || 3000;
-
-
 
 server.listen(PORT,()=>{
   console.log(`listening on port ${PORT}`);
@@ -33,14 +30,15 @@ server.get('*',generalHandler);
 //let parkurl=`https://developer.nps.gov/api/v1/parks?q=${cityName}&api_key=${key}`
 
 
+
 function locationHandler(req,res){
   let cityName=req.query.city;
   let key=process.env.LOCATION_KEY;
-  //pk.f7c16ea4ef7fffdc3b4cbaeb3fd07102
-  let locURL=` https://us1.locationiq.com/v1/search.php?key=${key}&q=${cityName}&format=json`;
+  let locURL=`https://us1.locationiq.com/v1/search.php?key=${key}&q=${cityName}&format=json`;
   superagent.get(locURL)
 
     .then(geodata=>{
+      //console.log(geodata);
       let gData = geodata.body;
       let locationData = new Location(cityName,gData);
       res.send(locationData);
@@ -58,7 +56,7 @@ function weatherHandler(req,res){
   let weather =[];
   let cityName=req.query.city;
   let key=process.env.WEATHER_KEY;
-  let weaURL=`http://api.weatherbit.io/v2.0/forecast/daily?city=${cityName}&key=${key}`;
+  let weaURL=`http://api.weatherbit.io/v2.0/forecast/daily?city=${cityName}&key=${key}&days=5`;
   superagent.get(weaURL)
 
     .then(wetDATA=>{
@@ -79,13 +77,13 @@ function parkHandler(req,res){
   let park =[];
   let cityName=req.query.city;
   let key=process.env.PARK_KEY;
-  let parkURL=`http://api.weatherbit.io/v2.0/forecast/daily?city=${cityName}&key=${key}`;
+  let parkURL=`https://developer.nps.gov/api/v1/parks?q=${cityName}&api_key=${key}&limit=8`;
   superagent.get(parkURL)
 
     .then(parkDATA=>{
       parkDATA.body.data.map(item=>{
         let parkRes= new Park (item);
-        parkDATA.push(parkRes);
+        park.push(parkRes);
       });
       res.send(park);
     })
@@ -100,7 +98,7 @@ function parkHandler(req,res){
 
 function Weather(local){
   this.forecast=local.weather.description;
-  this.time=local.datetime;
+  this.time= new Date(local.datetime).toString().slice(0,15);
 }
 
 function Location(cityName,locData){
