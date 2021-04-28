@@ -21,7 +21,7 @@ server.use(cors());
 
 server.get('/location',locationHandler);
 server.get('/weather',weatherHandler);
-server.get('/park',parkHandler);
+server.get('/parks',parkHandler);
 server.get('*',generalHandler);
 //pk.f7c16ea4ef7fffdc3b4cbaeb3fd07102
 //VG7a8BnF9CQ13Bwtd8LTKGqofgtDiiazhqLUNbQ3
@@ -54,7 +54,7 @@ function locationHandler(req,res){
 
 function weatherHandler(req,res){
   let weather =[];
-  let cityName=req.query.city;
+  let cityName=req.query.search_query;
   let key=process.env.WEATHER_KEY;
   let weaURL=`http://api.weatherbit.io/v2.0/forecast/daily?city=${cityName}&key=${key}&days=5`;
   superagent.get(weaURL)
@@ -75,7 +75,7 @@ function weatherHandler(req,res){
 
 function parkHandler(req,res){
   let park =[];
-  let cityName=req.query.city;
+  let cityName=req.query.search_query;
   let key=process.env.PARK_KEY;
   let parkURL=`https://developer.nps.gov/api/v1/parks?q=${cityName}&api_key=${key}&limit=8`;
   superagent.get(parkURL)
