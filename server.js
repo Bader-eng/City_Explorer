@@ -13,7 +13,6 @@ server.listen(PORT,()=>{
 server.use(cors());
 
 
-
 // server.get('/data',(req,res)=>{
 //   res.status(200).send('Hi from the data page, I am the server !!!');
 // });
@@ -22,7 +21,7 @@ server.use(cors());
 
 server.get('/location',locationHandler);
 server.get('/weather',weatherHandler);
-server.get('/park',parkHandler);
+server.get('/parks',parkHandler);
 server.get('*',generalHandler);
 //pk.f7c16ea4ef7fffdc3b4cbaeb3fd07102
 //VG7a8BnF9CQ13Bwtd8LTKGqofgtDiiazhqLUNbQ3
@@ -55,7 +54,7 @@ function locationHandler(req,res){
 
 function weatherHandler(req,res){
   let weather =[];
-  let cityName=req.query.city;
+  let cityName=req.query.search_query;
   let key=process.env.WEATHER_KEY;
   let weaURL=`http://api.weatherbit.io/v2.0/forecast/daily?city=${cityName}&key=${key}&days=5`;
   superagent.get(weaURL)
@@ -76,7 +75,7 @@ function weatherHandler(req,res){
 
 function parkHandler(req,res){
   let park =[];
-  let cityName=req.query.city;
+  let cityName=req.query.search_query;
   let key=process.env.PARK_KEY;
   let parkURL=`https://developer.nps.gov/api/v1/parks?q=${cityName}&api_key=${key}&limit=8`;
   superagent.get(parkURL)
@@ -95,31 +94,12 @@ function parkHandler(req,res){
 }
 
 
-server.get('/',(req,res)=>{
-  res.send('Hi this in my page!');
-});
-
-server.get('/location',(req,res)=>{
-  let locationData=require('./data/location.json');
-  //console.log(locationData);
-  let locationRes= new Location(locationData);
-  res.send(locationRes);
-});
-
-let weather =[];
-server.get('/weather',(req,res)=>{
-  let weatherData=require('./data/weather.json').data;
-  weatherData.forEach(item =>{
-    let weatherRes= new Weather (item);
-
 
 
 function Weather(local){
   this.forecast=local.weather.description;
   this.time= new Date(local.datetime).toString().slice(0,15);
-
 }
-//done
 
 function Location(cityName,locData){
   this.search_query=cityName;
@@ -127,7 +107,6 @@ function Location(cityName,locData){
   this.latitude=locData[0].lat;
   this.longitude=locData[0].lon;
 }
-
 
 function Park(cityName){
   this.name=cityName.fullName;
@@ -139,13 +118,10 @@ function Park(cityName){
 
 
 function generalHandler(req,res){
-server.get('/*',(req,res)=>{
   let errObj = {
     status: 500,
     resText: 'sorry! this page not found'
   };
   res.status(404).send(errObj);
-
 }
-});
-//http://localhost:5000/weather
+
