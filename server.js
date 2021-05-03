@@ -32,10 +32,12 @@ server.use(cors());
 server.get('/location',locationHandler);
 server.get('/weather',weatherHandler);
 server.get('/parks',parkHandler);
-server.get('*',generalHandler);
 server.get('/movies',moviesHandler);
-// server.get('/parks',parkHandler);
+server.get('/yelp',yelpHandelr);
+server.get('*',generalHandler);
 
+
+//server.get('/yelp',parkHandler);
 //pk.f7c16ea4ef7fffdc3b4cbaeb3fd07102
 //VG7a8BnF9CQ13Bwtd8LTKGqofgtDiiazhqLUNbQ3
 //[ Base URL: developer.nps.gov/api/v1 ]
@@ -134,6 +136,7 @@ function parkHandler(req,res){
 function moviesHandler(req,res){
   let cityName=req.query.search_query;
   let Key=process.env.MOVIE_API_KEY;
+  //https://api.themoviedb.org/3/search/movie?api_key=${key}&query=${city}&language=de-DE&region=DE
   //let moviesURL = `https://api.themoviedb.org/3/discover/movie?api_key=${Key}&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false`;
   let moviesURL=`https://api.themoviedb.org/3/search/movie?api_key=${Key}&query=${cityName}`;
   superagent.get(moviesURL)
@@ -153,23 +156,46 @@ function moviesHandler(req,res){
 }
 //ys5Xhqe3Qc1T1tmjOaDHd1ZH5i50Q4MMZmSG3xXsaSPolBCpYqTkLjrxEz4nkLpx4UQoFhwKju7HiBwnKGgR_GKpTmRatCLLSNsEuTmYM92RQ6zQg4fcwx32QnyMYHYx
 //HJZqkrfLLxcF9l4xLWZCYA
-server.get('/ylep',(req,res)=>{
-  let YELP_API_KEY=process.env.YELP_API_KEY;
-  let cityName=req.query.search_query;
-  let page =req.query.page;
-  const resultPerPage=5;
-  const start=((page -1)* resultPerPage +1);
-  let yelpURL=`https://api.yelp.com/v3/businesses/search?location=${cityName}&limit=${resultPerPage}$offset=${start}`;
-  superagent.get(yelpURL)
-    .set('Authorization',`Bearer ${YELP_API_KEY}`)
-    .then(data => {
-      let getdata=data.body.businesses;
-      let newData=getdata.map(item =>{
-        return new Yelp (item);
-      });
-      res.send(newData);
-    });
-});
+// function yelphandler(req,res){
+//   let yelp_key=process.env.YELP_API_KEY;
+//   let cityName=req.query.search_query;
+//   let page =req.query.page;
+//   const resultPerPage=5;
+//   const start=((page -1)* resultPerPage +1);
+//   let yelpURL=`https://api.yelp.com/v3/businesses/search?location=${cityName}&limit=${resultPerPage}$offset=${start}`;
+//   superagent.get(yelpURL)
+//     .set('Authorization',`Bearer ${yelp_key}`)
+//     .then(data => {
+//       let getdata=data.body.businesses;
+//       let newData=getdata.map(item =>{
+//         return new Yelp (item);
+//       });
+//       res.send(newData);
+//     })
+//     .catch(error=>{
+//       console.log(error);
+//       res.send(error);
+//     });
+// }
+
+
+function yelpHandelr(req, res) {
+   let cityName = req.query.search_query;
+    let page = req.query.page;
+     let key = process.env.YELP_API_KEY;  
+     const resultPerPAge = 5; 
+      const start = ((page - 1) * resultPerPAge + 1); 
+       let yelpURL = `https://api.yelp.com/v3/businesses/search?location=${cityName}&limit=${resultPerPAge}&offset=${start}`;  superagent.get(yelpURL)    .set('Authorization', `Bearer ${key}`)    .then(data => {
+      let yelpData = data.body.businesses;
+      let yelpInfo = yelpData.map((item) => {
+        return new Yelp(item);      });
+      res.send(yelpInfo);
+    })    .catch(error => {      res.send(error);    });}
+
+
+
+
+
 
 function Weather(local){
   this.forecast=local.weather.description;
